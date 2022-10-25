@@ -1,0 +1,9 @@
+---
+- name: User Creation
+  hosts: aws_servers
+  tasks:
+          - name: Create TestUser with UID 4000
+            user:
+                    name: testuser
+                    uid: 4000
+                    state: present

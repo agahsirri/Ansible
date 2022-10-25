@@ -1,0 +1,27 @@
+---
+- hosts: all
+  become: true
+  become_user: root
+  tasks:
+          - name: Install Apache Web Server on the servers
+            ansible.builtin.yum:
+                    name: httpd
+                    state: present
+
+          - name: index.html providing
+            copy:
+                    src: files/index.html
+                    dest: /var/www/html/index.html
+
+          - name: httpd service is enabled
+            ansible.builtin.service:
+                    name: httpd
+                    enabled: true
+                    state: started
+
+          - name: Open port on the Firewall
+            ansible.posix.firewalld:
+                    service: http
+                    state: enabled
+                    immediate: true
+                    permanent: true

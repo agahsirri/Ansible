@@ -1,0 +1,22 @@
+---
+- hosts: aws_servers
+  become: true
+  become_user: ec2-user
+  tasks:
+          - name: Touch a file
+            ansible.builtin.file:
+                    path: /home/ec2-user/test.txt
+                    state: touch
+                    mode: u+rw,g+wx,o+rwx
+
+          - name: Remove a line from the file
+            lineinfile:
+                    path: /home/ec2-user/test.txt
+                    regexp: "$(date)"
+                    state: absent
+                    backup: yes
+
+          - name: Insert a line at the end of the file
+            lineinfile:
+                    path: /home/ec2-user/test.txt
+                    line: "{{ lookup('pipe', 'date +%Y%m%d-%H%M') }}"

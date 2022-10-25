@@ -1,0 +1,33 @@
+---
+- hosts: all
+  become: true
+  become_user: root
+  tasks:
+          - name: Install Apache Web Server on the servers
+            ansible.builtin.yum:
+                    name: httpd
+                    state: latest
+
+          - name: Custom index.html
+            ansible.builtin.copy:
+                    dest: /var/www/html/index.html
+                    content: |
+                            Custom Web Page!
+
+          - name: httpd service is enabled
+            ansible.builtin.service:
+                    name: httpd
+                    enabled: true
+                    state: started
+
+          - name: Open port on the Firewall
+            ansible.posix.firewalld:
+                    service: http
+                    state: enabled
+                    immediate: true
+                    permanent: true
+
+          - name: Install MC
+            ansible.builtin.yum:
+                    name: mc
+                    state: latest

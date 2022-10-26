@@ -1,0 +1,13 @@
+---
+- name: update /etc/hosts file
+  hosts: all
+  remote_user: ec2-user
+  become: yes
+  become_method: sudo
+
+  tasks:
+          - name: server.example.com in to /etc/hosts
+            lineinfile:
+                    path: /etc/hosts
+                    line: '192.168.1.1 server.example.com server'
+                    state: absent

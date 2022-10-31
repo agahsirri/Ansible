@@ -1,0 +1,28 @@
+---
+- name: Configure WebServerS
+  hosts: webservers
+  become: yes
+  vars:
+          installation_packages:
+                  - https
+                  - mariadb-server
+
+  tasks:
+          - name: Package Installed
+            yum:
+                    name: "{{ item }}"
+                    state: latest
+
+          - name: Service Running
+            service:
+                    name: "{{ item }}"
+                    state: started
+                    enabled: true
+            loop: "{{ installation_package }}"
+
+          - name: HTTP Allowed Through Firewall
+            firewalld:
+                    service: http
+                    state: enabled
+                    immediate: true
+                    permanent: true

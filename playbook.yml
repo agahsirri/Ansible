@@ -1,19 +1,21 @@
+---
 - name: MariaDB server is running
-  hosts: database_dev
+  hosts: database_dev, database_prod
   vars:
-          mariadb_packages:
-                  - mariadb-server
-                  - pythonB-PyMySOL
-  tasks:
-          - name: HariaDB Packages are installed
-            yum:
-                    name: "{{ item }}"
-                    state: present
-                    loop: "{{ mariadb_packages }}"
-          
-          - name: Start mariaDB service
-            service:
-                    name: mariadb
-                    state: started
-                    enabled: true
+    mariadb_packages:
+      - mariadb-server
+      - python3-PyMySQL
 
+  tasks:
+    - name: MariaDB packages are installed
+      yum:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ mariadb_packages }}"
+      when: ansible_distribution == "RedHat"
+
+    - name: Start MariaDB service
+      service:
+        name: mariadb
+        state: started
+        enabled: true

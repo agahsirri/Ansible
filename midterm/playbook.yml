@@ -1,7 +1,7 @@
 ---
 - name: Configure WebServerS
   hosts: webservers
-  become: yes
+  become: true
   vars:
           installation_packages:
                   - https
@@ -26,3 +26,10 @@
                     state: enabled
                     immediate: true
                     permanent: true
+          - name: Deploy Web Page
+            template:
+                    src: index.html.j2
+                    dest: /var/www/html/index.html
+                    owner: root
+                    group: root
+                    mode: 0644
